@@ -10,14 +10,18 @@ public class TwoSum {
     public static void main(String[] args) {
 
         int[] numbers = {16, 3, 11, 5, 15, 2};
-        System.out.println(Arrays.toString(findSumOfTwoNumbers(numbers,8)));
+        System.out.println(Arrays.toString(findSumOfTwoNumbersWithTwoPointer(numbers, 8)));
 
         System.out.println(Arrays.toString(findIndicesWithTwoPointerAndHashMap(new int[]{16, 3, 11, 5, 15, 2}, 8)));
         System.out.println(Arrays.toString(findIndicesWithTwoPointerAndTreeMap(new int[]{16, 3, 11, 5, 15, 2}, 8)));
 
+        System.out.println(Arrays.toString(findSumOfTwoWithTwoPointer(new int[]{5, 6, 2, 13, 9, 1}, 8)));
+        System.out.println(Arrays.toString(findTwoSum(new int[]{5, 6, 2, 13, 9, 1}, 8)));
+        System.out.println(Arrays.toString(findTwoSumNestedLoop(new int[]{5, 6, 2, 13, 9, 1}, 8)));
+
     }
 
-    public static int[] findSumOfTwoNumbers(int[] array, int target) {
+    public static int[] findSumOfTwoNumbersWithTwoPointer(int[] array, int target) {
         // sort the array
         Arrays.sort(array); // nlog(n)
         // create two pointers, one starts from the beginning, other one starts from the end
@@ -34,6 +38,24 @@ public class TwoSum {
             }
         }
         return new int[0];
+    }
+
+    public static int[] findSumOfTwoWithTwoPointer(int[] arr, int target) {
+        Arrays.sort(arr);
+        int slow = 0;
+        int fast = 2;
+
+        while (arr[slow] + arr[fast] != target) {
+            if (arr[slow] + arr[fast] < target) {
+                fast++;
+            } else if (arr[slow] + arr[fast] > target) {
+                fast--;
+            }
+            if (arr[slow] + arr[fast] != target) {
+                slow++;
+            }
+        }
+        return new int[]{arr[slow], arr[fast]};
     }
 
     public static int[] findIndicesWithTwoPointerAndHashMap(int[] arr, int target) {
@@ -77,6 +99,34 @@ public class TwoSum {
             } else map.remove(map.lastKey());
         }
         return new int[0];
+    }
+
+    public static int[] findTwoSum(int[] array, int target) {
+        // create map to store targetValue as key, index of targetValue as value
+        Map<Integer, Integer> map = new HashMap<>();
+        // iterate through array
+        for (int i = 0; i < array.length; i++) { // n
+            int targetValue = target - array[i]; // complement=targetValue
+            if (map.containsKey(targetValue)) {
+                return new int[]{map.get(targetValue), i}; // return index of targetValue and current index
+            } else {
+                map.put(array[i], i); // if it doesn't exist, add targetValue as key and its index as value
+            }
+        }
+        return new int[]{};
+    }
+
+    public static int[] findTwoSumNestedLoop(int[] array, int target) {
+        // Brute force
+        // n^n
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i+1; j < array.length; j++) {
+                if (array[i] + array[j] == target) {
+                    return new int[]{i,j};
+                }
+            }
+        }
+        return array;
     }
 
 }
